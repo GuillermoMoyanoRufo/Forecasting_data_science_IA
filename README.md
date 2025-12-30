@@ -7,9 +7,6 @@ This project features an interactive **Business Intelligence & Machine Learning 
 
 The core objective is to empower sales teams with a **"What-If" Analysis tool**, allowing them to simulate market scenarios by adjusting pricing strategies and competitor behavior before making real-world decisions.
 
-## 🔗 Live Demo
-**Access the interactive dashboard here:** [https://forecastingdatascienceia-ibqwbjagxbykabcg2gryjd.streamlit.app/](https://forecastingdatascienceia-ibqwbjagxbykabcg2gryjd.streamlit.app/)
-
 ---
 
 ## 🛠️ Tech Stack & Key Features
@@ -35,7 +32,6 @@ The core objective is to empower sales teams with a **"What-If" Analysis tool**,
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-
 # From the root directory
 streamlit run app/app.py
 

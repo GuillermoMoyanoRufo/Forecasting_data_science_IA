@@ -27,33 +27,39 @@ COLORS = {
     'warning': '#FF9800'
 }
 
-# ==================== CARGA DE RECURSOS (CORREGIDA) ====================
+# ==================== CARGA DE RECURSOS (ROBUSTA) ====================
 
 def cargar_modelo():
-    # El rastreador dice que está en /app/modelo_final.joblib
-    # Intentamos cargar usando la ruta relativa que confirma tu log
+    """Carga el modelo desde la carpeta de la app"""
     try:
-        # Intentamos ruta directa desde donde está app.py
+        # Intenta ruta relativa al archivo app.py
         ruta = os.path.join(os.path.dirname(__file__), 'modelo_final.joblib')
         if os.path.exists(ruta):
-            return joblib.load(ruta)
+            with open(ruta, 'rb') as f:
+                return joblib.load(f)
         
-        # Si falla, intentamos la que el sistema mostró en el log
-        ruta_alternativa = 'app/modelo_final.joblib'
-        if os.path.exists(ruta_alternativa):
-            return joblib.load(ruta_alternativa)
-    except:
+        # Ruta alternativa estándar en Streamlit Cloud
+        ruta_alt = 'app/modelo_final.joblib'
+        if os.path.exists(ruta_alt):
+            return joblib.load(ruta_alt)
+    except Exception as e:
+        st.error(f"Error técnico al cargar modelo: {e}")
         return None
     return None
 
 def cargar_datos():
+    """Busca el CSV en todas las ubicaciones posibles del repo"""
     nombre = 'inferencia_df_transformado.csv'
-    # Buscamos en la carpeta data/processed relativa a la raíz
+    
+    # Lista exhaustiva de rutas posibles en GitHub
     rutas = [
-        f'data/processed/{nombre}',
-        f'app/data/processed/{nombre}',
-        nombre
+        os.path.join('data', 'processed', nombre),
+        os.path.join('app', 'data', 'processed', nombre),
+        os.path.join(os.path.dirname(__file__), 'data', 'processed', nombre),
+        nombre,
+        f'app/{nombre}'
     ]
+    
     for r in rutas:
         if os.path.exists(r):
             try:
@@ -69,17 +75,18 @@ def cargar_datos():
 modelo = cargar_modelo()
 df = cargar_datos()
 
-# Verificación
+# Verificación de recursos
 if modelo is None:
-    st.error("❌ El archivo existe en /app pero no se pudo cargar.")
-    st.info("Esto puede pasar si el archivo se subió mal. Intenta subirlo de nuevo a GitHub.")
+    st.error("❌ El modelo existe pero no pudo cargarse (revisa la versión de scikit-learn en requirements.txt).")
     st.stop()
 
 if df is None:
-    st.error("❌ No se encuentra el CSV de datos.")
+    st.error("❌ No se encuentra el archivo CSV de datos.")
+    st.info("Asegúrate de que 'inferencia_df_transformado.csv' esté en la carpeta 'data/processed' en GitHub.")
     st.stop()
 
 # ==================== FUNCIONES DE LÓGICA ====================
+
 def hacer_predicciones_recursivas(df_producto, modelo):
     df_producto = df_producto.sort_values('fecha').reset_index(drop=True)
     columnas_modelo = modelo.feature_names_in_
@@ -99,49 +106,37 @@ def hacer_predicciones_recursivas(df_producto, modelo):
             pred = modelo.predict(X_pred)[0]
             predicciones.append(pred)
             if idx < len(df_pred) - 1:
+                # Actualización de Lags para el día siguiente
                 for col in df_pred.columns:
                     if 'lag1' in col.lower() and 'unidades' in col.lower():
                         df_pred.loc[idx + 1, col] = pred
-        except:
+        except Exception as e:
             return None, None
     return np.array(predicciones), df_pred
 
 def realizar_simulacion(df_base, producto, desc, escen, mod):
     df_sim = df_base[df_base['nombre'] == producto].copy()
     df_sim = df_sim.sort_values('fecha').reset_index(drop=True)
+    
     precio_base = df_sim['precio_base'].iloc[0]
     df_sim['precio_venta'] = precio_base * (1 + desc / 100)
+    
     f_comp = {"Actual (0%)": 1.0, "Competencia -5%": 0.95, "Competencia +5%": 1.05}[escen]
+    
     cols_c = ['Amazon_x', 'Decathlon_x', 'Deporvillage_x', 'Amazon_y', 'Decathlon_y', 'Deporvillage_y']
     for c in cols_c:
-        if c in df_sim.columns: df_sim[c] = df_sim[c] * f_comp
+        if c in df_sim.columns: 
+            df_sim[c] = df_sim[c] * f_comp
+            
     preds, df_f = hacer_predicciones_recursivas(df_sim, mod)
     if preds is not None:
         df_f['ingresos_predicho'] = preds * df_f['precio_venta']
     return preds, df_f
 
-# ==================== INTERFAZ ====================
+# ==================== INTERFAZ DE USUARIO ====================
 if 'sim' not in st.session_state:
     st.session_state.sim = False
 
-st.sidebar.header("🎮 Controles")
-producto_sel = st.sidebar.selectbox("📦 Producto:", sorted(df['nombre'].unique()))
+st.sidebar.header("🎮 Controles de Simulación")
+producto_sel = st.sidebar.selectbox("📦 Selecciona Producto:", sorted(df['nombre'].unique()))
 desc_sel = st.sidebar.slider("💰 Ajuste Precio (%)", -50, 50, 0, 5)
-escen_sel = st.sidebar.radio("🏆 Competencia:", ["Actual (0%)", "Competencia -5%", "Competencia +5%"])
-
-if st.sidebar.button("🚀 Ejecutar Simulación", use_container_width=True, type="primary"):
-    st.session_state.sim = True
-
-if st.session_state.sim:
-    st.markdown(f"<h1 style='text-align: center; color: #1428a0;'>📊 Dashboard: {producto_sel}</h1>", unsafe_allow_html=True)
-    preds, res = realizar_simulacion(df, producto_sel, desc_sel, escen_sel, modelo)
-    if preds is not None:
-        c1, c2, c3 = st.columns(3)
-        c1.metric("📦 Unidades Totales", f"{int(preds.sum()):,}")
-        c2.metric("💵 Ingresos Est.", f"€{res['ingresos_predicho'].sum():,.2f}")
-        c3.metric("📉 Variación Precio", f"{desc_sel}%")
-        fig, ax = plt.subplots(figsize=(10, 4))
-        ax.plot(res['dia_mes'], preds, marker='o', color='#1428a0')
-        st.pyplot(fig)
-else:
-    st.info("Configura los parámetros y pulsa 'Ejecutar Simulación'.")

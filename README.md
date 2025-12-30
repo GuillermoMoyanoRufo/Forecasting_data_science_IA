@@ -24,24 +24,3 @@ The core objective is to empower sales teams with a **"What-If" Analysis tool**,
 ├── models/           # Serialized production-ready models (.joblib)
 ├── app/              # Streamlit application (Frontend & Logic)
 └── requirements.txt  # Project dependencies
-
-## 🚀 Getting Started
-
-### 1. Setup Environment
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-# From the root directory
-streamlit run app/app.py
-
-📊 Business Logic Implemented
-Recursive Forecasting: Unlike static models, this app updates its own future "lags" based on previous predictions to maintain accuracy over a 30-day horizon.
-
-Competitor Scenarios: Users can toggle between three competitive intensity levels, impacting the price-ratio and estimated demand.
-
-Black Friday Impact: Special weighting and visual markers for high-traffic dates (Nov 28th).
-
-Author: Guillermo Moyano Rufo
-
-Data Science & AI Project

@@ -28,20 +28,25 @@ COLORS = {
 
 # ==================== FUNCIONES DE CARGA ====================
 def cargar_modelo():
+    """Carga el modelo guardado de forma robusta"""
     import os
     import joblib
-    from pathlib import Path
-
-    # Obtiene la ruta de la carpeta donde está este archivo app.py
-    dir_actual = Path(__file__).parent
-    ruta_modelo = dir_actual / 'modelo_final.joblib'
-
-    if ruta_modelo.exists():
-        return joblib.load(ruta_modelo)
-    else:
-        # Esto nos dirá exactamente qué está viendo Streamlit si falla
-        print(f"DEBUG: Busqué en {ruta_modelo}")
-        return None
+    
+    # Intentamos varias rutas posibles para que funcione en local y en la nube
+    posibles_rutas = [
+        'app/modelo_final.joblib',           # Ruta estándar en Streamlit Cloud
+        'modelo_final.joblib',               # Si se ejecuta desde dentro de /app
+        'models/modelo_final.joblib',        # Tu ruta original
+        '/mount/src/forecasting_data_science_ia/app/modelo_final.joblib' # Ruta absoluta nube
+    ]
+    
+    for ruta in posibles_rutas:
+        if os.path.exists(ruta):
+            try:
+                return joblib.load(ruta)
+            except Exception as e:
+                continue
+    return None
 
 def cargar_datos():
     """Carga los datos de inferencia preparados"""

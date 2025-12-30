@@ -37,16 +37,26 @@ def cargar_modelo():
         'app/modelo_final.joblib',           # Ruta estándar en Streamlit Cloud
         'modelo_final.joblib',               # Si se ejecuta desde dentro de /app
         'models/modelo_final.joblib',        # Tu ruta original
+        '../models/modelo_final.joblib',     # Ruta relativa local
         '/mount/src/forecasting_data_science_ia/app/modelo_final.joblib' # Ruta absoluta nube
     ]
     
     for ruta in posibles_rutas:
         if os.path.exists(ruta):
             try:
-                return joblib.load(ruta)
+                modelo = joblib.load(ruta)
+                return modelo
             except Exception as e:
                 continue
     return None
+
+# ==================== CONFIGURACIÓN DE LA PÁGINA ====================
+# Asegúrate de que en tu bloque main() o donde llames a cargar_modelo() esté así:
+modelo = cargar_modelo()
+
+if modelo is None:
+    st.error("❌ No se pudo cargar el modelo. El archivo no se encuentra en ninguna de las rutas rastreadas.")
+    st.stop() # Esto detiene la app para que no dé más errores
 
 def cargar_datos():
     """Carga los datos de inferencia preparados"""

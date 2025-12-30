@@ -1,6 +1,6 @@
 # 📈 Predictive Demand & Revenue Simulator - November Campaign
 
-[![Streamlit App](https://ventas-noviembre-simulador.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ventas-noviembre-simulador.streamlit.app/)
 
 ## 📝 Project Overview
 This project features an interactive **Business Intelligence & Machine Learning tool** designed to forecast sales demand and revenue for an electronics e-commerce catalog during the high-stakes November campaign.

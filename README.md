@@ -1,26 +1,27 @@
-# 📈 Predictive Demand & Revenue Simulator - November Campaign
+# 📈 Simulador Predictivo de Demanda e Ingresos - Campaña de Noviembre
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ventas-noviembre-simulador.streamlit.app/)
 
-## 📝 Project Overview
-This project features an interactive **Business Intelligence & Machine Learning tool** designed to forecast sales demand and revenue for an electronics e-commerce catalog during the high-stakes November campaign.
+## 📝 Descripción General del Proyecto
+Este proyecto presenta una herramienta interactiva de Business Intelligence y Machine Learning diseñada para pronosticar la demanda de ventas y los ingresos de un catálogo de comercio electrónico de electrónica durante la crítica campaña de noviembre.
 
-The core objective is to empower sales teams with a **"What-If" Analysis tool**, allowing them to simulate market scenarios by adjusting pricing strategies and competitor behavior before making real-world decisions.
+El objetivo central es empoderar a los equipos de ventas con una herramienta de análisis "What-If" (¿Qué pasaría si...?), permitiéndoles simular diversos escenarios de mercado mediante el ajuste de estrategias de precios y el comportamiento de la competencia antes de tomar decisiones en el mundo real.
 
 ---
 
-## 🛠️ Tech Stack & Key Features
-* **Machine Learning:** Random Forest Regressor with **Recursive Prediction Logic** (Multi-step forecasting).
-* **Feature Engineering:** Time-series processing including 7-day Lags, Moving Averages (MA7), and Seasonality factors.
-* **Interactive UI:** Built with **Streamlit**, featuring real-time KPI recalculation and dynamic data visualization with Matplotlib/Seaborn.
-* **Data Pipeline:** Full processing from raw cleaning to feature transformation.
+## 🛠️ Stack Tecnológico y Funcionalidades Clave
 
+* **Machine Learning:** Random Forest Regressor con **Lógica de Predicción Recursiva** (Pronóstico de múltiples pasos).
+* **Ingeniería de Variables:** Procesamiento de series temporales que incluye retardos de 7 días (Lags), Medias Móviles (MA7) y factores de estacionalidad.
+* **Interfaz Interactiva:** Desarrollada con **Streamlit**, con recálculo de KPIs en tiempo real y visualización dinámica de datos con Matplotlib/Seaborn.
+* **Pipeline de Datos:** Procesamiento completo, desde la limpieza de datos brutos hasta la transformación de variables para inferencia.
+  
 ## 📁 Project Structure
 ```text
 ├── data/
-│   ├── raw/          # Original, immutable data
-│   └── processed/    # Cleaned data and engineered features for inference
-├── notebooks/        # EDA (Exploratory Data Analysis) and Model Training
-├── models/           # Serialized production-ready models (.joblib)
-├── app/              # Streamlit application (Frontend & Logic)
-└── requirements.txt  # Project dependencies
+│   ├── raw/          # Datos originales e inmutables
+│   └── processed/    # Datos limpios y variables generadas para inferencia
+├── notebooks/        # EDA (Análisis Exploratorio de Datos) y Entrenamiento del Modelo
+├── models/           # Modelos serializados listos para producción (.joblib)
+├── app/              # Aplicación Streamlit (Frontend y Lógica)
+└── requirements.txt  # Dependencias del proyecto

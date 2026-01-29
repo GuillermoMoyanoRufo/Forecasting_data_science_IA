@@ -1,27 +1,27 @@
-# 📈 Simulador Predictivo de Demanda e Ingresos - Campaña de Noviembre
+# 📈 Demand & Revenue Predictive Simulator - November Sales Season
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ventas-noviembre-simulador.streamlit.app/)
 
-## 📝 Descripción General del Proyecto
-Este proyecto presenta una herramienta interactiva de Business Intelligence y Machine Learning diseñada para pronosticar la demanda de ventas y los ingresos de un catálogo de comercio electrónico de electrónica durante la crítica campaña de noviembre.
+## 📝 Project Overview
+This project features an interactive **Business Intelligence and Machine Learning** tool designed to forecast sales demand and revenue for an e-commerce electronics catalog during the critical November peak season.
 
-El objetivo central es empoderar a los equipos de ventas con una herramienta de análisis "What-If" (¿Qué pasaría si...?), permitiéndoles simular diversos escenarios de mercado mediante el ajuste de estrategias de precios y el comportamiento de la competencia antes de tomar decisiones en el mundo real.
+The core objective is to equip sales teams with a **"What-If" analysis tool**, allowing them to simulate various market scenarios by adjusting pricing strategies and competitor behavior before making real-world execution decisions.
 
 ---
 
-## 🛠️ Stack Tecnológico y Funcionalidades Clave
+## 🛠️ Tech Stack & Key Functionalities
 
-* **Machine Learning:** Random Forest Regressor con **Lógica de Predicción Recursiva** (Pronóstico de múltiples pasos).
-* **Ingeniería de Variables:** Procesamiento de series temporales que incluye retardos de 7 días (Lags), Medias Móviles (MA7) y factores de estacionalidad.
-* **Interfaz Interactiva:** Desarrollada con **Streamlit**, con recálculo de KPIs en tiempo real y visualización dinámica de datos con Matplotlib/Seaborn.
-* **Pipeline de Datos:** Procesamiento completo, desde la limpieza de datos brutos hasta la transformación de variables para inferencia.
+* **Machine Learning:** Random Forest Regressor implementing **Recursive Prediction Logic** (Multi-step forecasting).
+* **Feature Engineering:** Advanced time-series processing, including 7-day lags, Moving Averages (MA7), and seasonality factors.
+* **Interactive Interface:** Built with **Streamlit**, featuring real-time KPI recalculation and dynamic data visualization using Matplotlib/Seaborn.
+* **Data Pipeline:** End-to-end processing, from raw data ingestion and cleaning to feature transformation for model inference.
   
 ## 📁 Project Structure
 ```text
 ├── data/
-│   ├── raw/          # Datos originales e inmutables
-│   └── processed/    # Datos limpios y variables generadas para inferencia
-├── notebooks/        # EDA (Análisis Exploratorio de Datos) y Entrenamiento del Modelo
-├── models/           # Modelos serializados listos para producción (.joblib)
-├── app/              # Aplicación Streamlit (Frontend y Lógica)
-└── requirements.txt  # Dependencias del proyecto
+│   ├── raw/          # Original and immutable data
+│   └── processed/    # Clean data and variables generated for inference
+├── notebooks/        # EDA (Exploratory Data Analysis) and Model Training
+├── models/           # Serialized models ready for production (.joblib)
+├── app/              # Streamlit Application (Frontend and Logic)
+└── requirements.txt  # Project dependencies
